@@ -1,18 +1,26 @@
 <template>
-  <div>
+  <v-container>
     <h1>Dashboard</h1>
+    <v-row>
+      <v-col v-for="sale in sales" :key="`${sale.title}`">
+        <SalesGraph :sale="sale" />
+      </v-col>
+    </v-row>
 
-    <SalesGraph v-for="sale in sales" :key="`${sale.title}`" :sale="sale" />
+    <v-row>
+      <v-col v-for="statistic in statistics" :key="`${statistic.title}`">
+        <StatisticCard :statistic="statistic" />
+      </v-col>
+    </v-row>
 
-    <StatisticCard
-      v-for="statistic in statistics"
-      :key="`${statistic.title}`"
-      :statistic="statistic"
-    />
-
-    <EmployeesTable :employees="employees" @select-employee="setEmployee" />
-
-    <EventTimeline :timeline="timeline" />
+    <v-row>
+      <v-col cols="8">
+        <EmployeesTable :employees="employees" @select-employee="setEmployee" />
+      </v-col>
+      <v-col>
+        <EventTimeline :timeline="timeline" />
+      </v-col>
+    </v-row>
 
     <v-snackbar v-model="snackbar">
       You have selected {{ selectedEmployee.name }},
@@ -21,19 +29,19 @@
         Close
       </v-btn>
     </v-snackbar>
-  </div>
+  </v-container>
 </template>
 
 <script>
-import EmployeesTable from '../components/EmployeesTable'
-import EventTimeline from '../components/EventTimeline'
-import SalesGraph from '../components/SalesGraph'
-import StatisticCard from '../components/StatisticCard'
+import EmployeesTable from '../components/EmployeesTable';
+import EventTimeline from '../components/EventTimeline';
+import SalesGraph from '../components/SalesGraph';
+import StatisticCard from '../components/StatisticCard';
 
-import employeesData from '../data/employees.json'
-import timelineData from '../data/timeline.json'
-import salesData from '../data/sales.json'
-import statisticsData from '../data/statistics.json'
+import employeesData from '../data/employees.json';
+import timelineData from '../data/timeline.json';
+import salesData from '../data/sales.json';
+import statisticsData from '../data/statistics.json';
 
 export default {
   name: 'DashboardPage',
@@ -54,14 +62,14 @@ export default {
       snackbar: false,
       statistics: statisticsData,
       timeline: timelineData
-    }
+    };
   },
   methods: {
     setEmployee(event) {
-      this.snackbar = true
-      this.selectedEmployee.name = event.name
-      this.selectedEmployee.title = event.title
+      this.snackbar = true;
+      this.selectedEmployee.name = event.name;
+      this.selectedEmployee.title = event.title;
     }
   }
-}
+};
 </script>
