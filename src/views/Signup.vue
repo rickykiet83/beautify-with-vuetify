@@ -3,7 +3,7 @@
     <v-row>
       <v-col>
         <h1>Signup</h1>
-        <v-form>
+        <v-form ref="signupForm" v-model="formValidity">
           <v-text-field
             type="email"
             error-count=""
@@ -11,6 +11,8 @@
             label=""
             append-icon=""
             v-model="email"
+            required
+            :rules="emailRules"
           ></v-text-field>
           <v-autocomplete
             label="Which browser do you use?"
@@ -31,8 +33,31 @@
             color
           ></v-text-field>
           <v-date-picker v-model="birthday"></v-date-picker>
-          <v-checkbox label="Agree to terms & conditions"></v-checkbox>
-          <v-btn type="submit" color="primary">Submit</v-btn>
+          <v-checkbox
+            label="Agree to terms & conditions"
+            v-model="agreeToTerms"
+            :rules="agreeToTermsRules"
+            required
+          ></v-checkbox>
+          <v-btn
+            class="mr-4"
+            type="submit"
+            color="primary"
+            :disabled="!formValidity"
+            >Submit</v-btn
+          >
+          <v-btn class="mr-4" color="success" @click="validateForm"
+            >Validate Form</v-btn
+          >
+
+          <v-btn
+            class="mr-4"
+            type="button"
+            color="warning"
+            @click="resetValidation"
+            >Reset Validation</v-btn
+          >
+          <v-btn type="button" color="error" @click="resetForm">Reset</v-btn>
         </v-form>
       </v-col>
     </v-row>
@@ -43,9 +68,37 @@
 export default {
   name: 'Signup',
   data: () => ({
+    formValidity: false,
     birthday: '',
-    browsers: ['Chrome', 'Firefox', 'Safari', 'Edge', 'Brave']
-  })
+    email: '',
+    emailRules: [
+      (value) => !!value || 'Email is required.',
+      (value) => value.indexOf('@') !== 0 || 'Email should have a username.',
+      (value) => value.includes('@') || 'Email should include an @ symbol.',
+      (value) =>
+        value.indexOf('.') - value.indexOf('@') > 1 ||
+        'Email should contain a valid domain.',
+      (value) =>
+        value.indexOf('.') <= value.length - 3 ||
+        'Email should contain a valid domain extension.'
+    ],
+    browsers: ['Chrome', 'Firefox', 'Safari', 'Edge', 'Brave'],
+    agreeToTerms: false,
+    agreeToTermsRules: [
+      (value) => !!value || 'You must agree to the terms and conditions '
+    ]
+  }),
+  methods: {
+    resetForm() {
+      this.$refs.signupForm.reset();
+    },
+    resetValidation() {
+      this.$refs.signupForm.resetValidation();
+    },
+    validateForm() {
+      this.$refs.signupForm.validate();
+    }
+  }
 };
 </script>
 
